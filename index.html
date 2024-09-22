@@ -1,37 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        
-        <title>Gazetteer</title>
-       
-    </head>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Project1-Gazetteer</title>
+    <link rel="stylesheet" href="libs/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.2.2/maptiler-sdk.umd.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.2.2/maptiler-sdk.css" rel="stylesheet" />
+    <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js" integrity="sha512-Abr21JO2YqcJ03XGZRPuZSWKBhJpUAR6+2wH5zBeO4wAw4oksr8PRdF+BKIRsxvCdq+Mv4670rZ+dLnIyabbGw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
+  </head>
+  <body>
+    <span id="selectContainer">
+      <select id="countrySelect" class="form-select shadow-sm">
+        <!-- populate from an AJAX CALL to a PHP routine that returns a JSON object that is an array of just ISO codes and names from countryBorders.geo.json -->
+        <option value="GB">Great Britain</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+        <option value="IT">Itlay</option>
 
-    <body>
-      <div id="map">
-
+      </select>
+    </span>
+    
+    <div id="map"></div>
+    
+    <!-- example modal layout -->
+    
+    <div id="exampleModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Overview</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-striped">
+              <tr>
+    
+                <td class="text-center">
+                  <i class="fa-solid fa-earth-americas fa-xl text-success"></i>
+                </td>
+    
+                <td>
+                  Capital
+                </td>
+    
+                <td class="text-end" id="txtCapital">
+                  value
+                </td>
+    
+              </tr>
+              <tr>
+    
+                <td class="text-center">
+                  <i class="fa-solid fa-people-group fa-xl text-success"></i>
+                </td>
+    
+                <td>
+                  Population
+                </td>
+    
+                <td class="text-end" id="txtPopulation">
+                  value
+                </td>
+    
+              </tr>
+              <tr>
+    
+                <td class="text-center">
+                  <i class="fa-solid fa-cloud-sun-rain fa-xl text-success"></i>
+                </td>
+    
+                <td>
+                  Weather
+                </td>
+    
+                <td class="text-end">
+                  value
+                </td>
+    
+              </tr>
+              <tr>
+    
+                <td class="text-center">
+                  <i class="fa-solid fa-coins fa-xl text-success"></i>
+                </td>
+    
+                <td>
+                  Currency
+                </td>
+    
+                <td class="text-end">
+                  value
+                </td>
+    
+              </tr>
+              <tr>
+                
+                <td class="text-center">
+                  <i class="fa-brands fa-wikipedia-w fa-xl text-success"></i>
+                </td>
+                
+                <td>
+                  Wikipedia
+                </td>
+                
+                <td class="text-end">
+                  value
+                </td>
+                
+              </tr> 
+                
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
-    </body>
+    </div>
+ 
+     <script src="libs/js/script.js"></script>
+     <script src="libs/js/borders.js"></script>
+     <script src="libs/js/countryinfo.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  </body>
 </html>
-
-<script>
-
-var map = L.map('map').setView([51.505, -0.09], 13);
-
-var layer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-});
-layer.addTo(map);
-
-
-
-
-
-</script>
-
-
-
