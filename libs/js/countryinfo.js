@@ -1,22 +1,40 @@
-function setView() {
-    $.ajax({
-        url: "libs/php/getCountryBorders.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            iso: $('#countrySelect option:selected').val() //getting iso from the value in the option
-        },
-        success: function(result) {
+function loadCountries() {
+    // Create an XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
 
-            if (result.status.name == "ok") {
+    // Specify the URL of the PHP file that returns the JSON
+    xhr.open('GET', '/project1/libs/php/getCountryInfo.php', true);
 
-                console.log(result['border']); //currently just logging the result
 
-            }
-      
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR);
-        }
-    });
-};
+    // Set the callback function to handle the response
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Parse the JSON response
+        var countries = JSON.parse(xhr.responseText);
+
+        // Get the select element
+        var select = document.getElementById('countrySelect');
+
+        // Clear the existing options
+        select.innerHTML = '';
+
+        // Populate the select with the countries
+        countries.forEach(function(country) {
+          var option = document.createElement('option');
+          option.value = country.iso;
+          option.textContent = country.name;
+          select.appendChild(option);
+        });
+      } else {
+        // Handle errors, e.g., show a message if the request fails
+        console.error('Failed to load countries:', xhr.status);
+        document.getElementById('countrySelect').innerHTML = '<option value="">Failed to load countries</option>';
+      }
+    };
+
+    // Send the AJAX request
+    xhr.send();
+  }
+
+  // Load the countries when the page loads
+  window.onload = loadCountries;

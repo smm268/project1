@@ -27,6 +27,7 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
   $("#exampleModal").modal("show");
 });
 
+
 // ---------------------------------------------------------
 // EVENT HANDLERS
 // ---------------------------------------------------------
@@ -48,14 +49,10 @@ $(document).ready(function () {
 
 })
 
-$.getJSON('libs/js/countryBorders.geo.json', function (geoJSONdata) {
-  var geoJSONgroup = L.geoJSON(geoJSONdata).addTo(map);
 
-  geoJSONgroup.eachLayer(function (layer) {
-    if (layer.feature.properties.name) {
-      // Zoom to that layer.
-      map.fitBounds(layer.getBounds());
-    }
-  });
-});
+
+
+
+
+
 
