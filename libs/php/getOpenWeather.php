@@ -2,7 +2,7 @@
 <?php
 
 	$executionStartTime = microtime(true) / 1000;
-    $url='api.openweathermap.org/data/2.5/weather?q=' . $_REQUEST['capital'] .'&units=metric&appid=a7e56466749cbee89130a3eed002da3a';
+    $url='https://api.openweathermap.org/data/2.5/weather?q=Paris&units=metric&appid=a7e56466749cbee89130a3eed002da3a';
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

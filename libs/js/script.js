@@ -3,6 +3,9 @@
 // ---------------------------------------------------------
 
 var map;
+let capitalCityWeather;
+let capitalCityLat;
+let capitalCityLon;
 
 // tile layers
 
@@ -80,6 +83,8 @@ function getCountryNamesAndCodes() {
   });
 
 }
+ 
+ 
 
  // Populate the currency selection dropdowns
  $.ajax({
@@ -103,25 +108,27 @@ function getCountryNamesAndCodes() {
   }
 });
 
+
 $.ajax({
   url: "libs/php/getOpenWeather.php",
   type: 'POST',
   dataType: 'json',
   data: {
-      capital: capitalCity,
+      capital: capitalCityWeather,
   }, 
   success: function(result) {
-      console.log('CurrentCapitalWeather', result);
+      console.log( result);
       capitalCityLat = result.weatherData.coord.lat;
       capitalCityLon = result.weatherData.coord.lon;
       
       if (result.status.name == "ok") {
 
-          $('#weather').html('&nbsp;&nbsp;&nbsp;&nbsp;Today: &nbsp;&nbsp;'+ result.weatherData.weather[0].description +'&nbsp;&nbsp; || &nbsp;&nbsp; current temp: &nbsp;' + result.weatherData.main.temp +'&#8451<br>');
+          $('#weather').html( result.weatherData.weather[0].description + result.weatherData.main.temp );
          
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
-          console.log(textStatus, errorThrown);
+          console.log("failed");
       }
+      
   });
