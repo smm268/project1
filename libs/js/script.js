@@ -49,10 +49,79 @@ $(document).ready(function () {
 
 })
 
+getCountryNamesAndCodes();
 
+ 
 
+//get country codes and names from getCountryCode.json and add to drop down selector
 
+function getCountryNamesAndCodes() {
 
+  $.ajax({
 
+    url: "libs/php/getCountry.php?",
 
+    type: "GET",
 
+    success: function (countries) {
+
+      let option = "";
+
+      for (let country of countries) {
+
+        option += '<option value="' + country[1] + '">' + country[0] + "</option>";
+
+      }
+
+      $("#countrySelect").append(option);
+
+    },
+
+  });
+
+}
+
+ // Populate the currency selection dropdowns
+ $.ajax({
+  type: 'GET',
+  url: 'libs/php/getCurrencyList.php',
+  dataType: 'json',
+  success: function(currencies) {
+
+      if (currencies.status.result == "OK") {
+          // Populate the 'from' and 'to' currency dropdowns - 'value' attribute is the currency code
+          $.each(currencies.data, function (key, currency) {
+              $('#currency').add('#currency').append($('<table></table>').attr({
+                  'value': currency.code,
+                  'data-name': currency.name
+              }).text(currency.name + ' (' + currency.code + ')'));
+          });
+
+          // Default the 'convert from' currency to GBP
+          $('#exampleModel').val('GBP');
+      }
+  }
+});
+
+$.ajax({
+  url: "libs/php/getOpenWeather.php",
+  type: 'POST',
+  dataType: 'json',
+  data: {
+      capital: capitalCity,
+  }, 
+  success: function(result) {
+      console.log('CurrentCapitalWeather', result);
+      capitalCityLat = result.weatherData.coord.lat;
+      capitalCityLon = result.weatherData.coord.lon;
+      
+      if (result.status.name == "ok") {
+
+          $('#weather').html('&nbsp;&nbsp;&nbsp;&nbsp;Today: &nbsp;&nbsp;'+ result.weatherData.weather[0].description +'&nbsp;&nbsp; || &nbsp;&nbsp; current temp: &nbsp;' + result.weatherData.main.temp +'&#8451<br>');
+         
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.log(textStatus, errorThrown);
+      }
+  });

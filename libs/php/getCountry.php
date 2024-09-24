@@ -1,6 +1,6 @@
 <?php
 
-$codes_json = file_get_contents("libs/json/countryBorders.geo.json");
+$codes_json = file_get_contents("../json/countryBorders.geo.json");
 
 $decoded = json_decode($codes_json);
 
