@@ -7,6 +7,8 @@ let capitalCityWeather;
 let capitalCityLat;
 let capitalCityLon;
 
+
+
 // tile layers
 
 var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
@@ -48,6 +50,7 @@ $(document).ready(function () {
 
   layerControl = L.control.layers(basemaps).addTo(map);
 
+
   infoBtn.addTo(map);
 
 })
@@ -75,7 +78,7 @@ function getCountryNamesAndCodes() {
         option += '<option value="' + country[1] + '">' + country[0] + "</option>";
 
       }
-
+     
       $("#countrySelect").append(option);
 
     },
@@ -83,9 +86,44 @@ function getCountryNamesAndCodes() {
   });
 
 }
- 
- 
+// Locating user's device and getting info from openCage API
+const successCallback = (position) => {
+  $.ajax({
+      url: "libs/php/openCage.php",
+      type: 'GET',
+      dataType: 'json',
+      data: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+      },
 
+      success: function(result) {
+          console.log('openCage PHP',result);
+          currentLat = result.data[0].geometry.lat;
+          currentLng = result.data[0].geometry.lng;
+         
+          $("selectOpt select").val(result.data[0].components["ISO_3166-1_alpha-3"]);
+          
+          let currentCountry = result.data[0].components["ISO_3166-1_alpha-3"];
+          $("#countrySelect").val(currentCountry).change();
+      
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+          console.log(textStatus, errorThrown);
+      }
+  }); 
+}
+
+const errorCallback = (error) => {
+          console.error(error);
+}
+navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+
+
+
+
+/*
  // Populate the currency selection dropdowns
  $.ajax({
   type: 'GET',
@@ -131,4 +169,4 @@ $.ajax({
           console.log("failed");
       }
       
-  });
+  }); */
