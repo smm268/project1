@@ -86,6 +86,33 @@ function getCountryNamesAndCodes() {
   });
 
 }
+   // Function to load and display polygon based on selection
+   function loadPolygon(country) {
+    fetch('libs/json/countryBorders.geo.json') // Change path as needed
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data).addTo(map);
+            // Optionally fit the map to the bounds of the polygon
+            const bounds = L.geoJSON(data).getBounds();
+            map.fitBounds(bounds);
+        })
+        .catch(err => console.error('Error loading JSON: ', err));
+}
+
+// Event listener for country selection
+document.getElementById('countrySelect').addEventListener('change', function() {
+    const selectedCountry = this.value;
+    // Clear previous layers if necessary
+    map.eachLayer(layer => {
+        if (layer instanceof L.GeoJSON) {
+            map.removeLayer(layer);
+        }
+    });
+    if (selectedCountry) {
+        loadPolygon(selectedCountry);
+    }
+});
+/*
 // Locating user's device and getting info from openCage API
 const successCallback = (position) => {
   $.ajax({
@@ -123,7 +150,7 @@ navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
 
 
-/*
+
  // Populate the currency selection dropdowns
  $.ajax({
   type: 'GET',
