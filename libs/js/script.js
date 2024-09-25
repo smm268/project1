@@ -86,7 +86,7 @@ function getCountryNamesAndCodes() {
   });
 
 }
-function countryInfo() {
+
 
   $.ajax({
     url: "libs/php/getCountryInfo.php",
@@ -112,10 +112,10 @@ function countryInfo() {
     },
     error: function(jqXHR, textStatus, errorThrown) {
       // your error code
+      console.log("failed to load selected country data")
     }
   }); 
 
-}
 /*
 // Locating user's device and getting info from openCage API
 const successCallback = (position) => {
@@ -150,7 +150,7 @@ const errorCallback = (error) => {
 }
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
-
+*/
 
 
 
@@ -200,4 +200,4 @@ $.ajax({
           console.log("failed");
       }
       
-  }); */
+  }); 
