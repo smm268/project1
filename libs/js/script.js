@@ -86,32 +86,36 @@ function getCountryNamesAndCodes() {
   });
 
 }
-   // Function to load and display polygon based on selection
-   function loadPolygon(country) {
-    fetch('libs/json/countryBorders.geo.json') // Change path as needed
-        .then(response => response.json())
-        .then(data => {
-            L.geoJSON(data).addTo(map);
-            // Optionally fit the map to the bounds of the polygon
-            const bounds = L.geoJSON(data).getBounds();
-            map.fitBounds(bounds);
-        })
-        .catch(err => console.error('Error loading JSON: ', err));
-}
+function countryInfo() {
 
-// Event listener for country selection
-document.getElementById('countrySelect').addEventListener('change', function() {
-    const selectedCountry = this.value;
-    // Clear previous layers if necessary
-    map.eachLayer(layer => {
-        if (layer instanceof L.GeoJSON) {
-            map.removeLayer(layer);
-        }
-    });
-    if (selectedCountry) {
-        loadPolygon(selectedCountry);
+  $.ajax({
+    url: "libs/php/getCountryInfo.php",
+    type: 'POST',
+    dataType: 'json',
+    data: {
+      country: $('#countrySelect').val(),
+     
+    },
+    success: function(result) {
+
+      console.log(JSON.stringify(result));
+
+      if (result.status.name == "ok") {
+
+      
+        $('#txtCapital').html(result['data'][0]['capital']);
+        $('#txtPopulation').html(result['data'][0]['population']);
+       
+
+      }
+    
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      // your error code
     }
-});
+  }); 
+
+}
 /*
 // Locating user's device and getting info from openCage API
 const successCallback = (position) => {
