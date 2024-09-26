@@ -1,7 +1,7 @@
 <?php
 
 
-$jsonFilePath = '../json/countryBorders.geo.json';
+$jsonFilePath = 'libs/json/countryBorders.geo.json';
 
 
 $jsonContents = file_get_contents($jsonFilePath);

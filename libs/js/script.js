@@ -6,9 +6,9 @@ var map;
 let capitalCityWeather;
 let capitalCityLat;
 let capitalCityLon;
+var countryLayer; 
 let border;
 let name;
-
 
 // tile layers
 
@@ -81,39 +81,41 @@ function getCountryNamesAndCodes() {
       }
      
       $("#countrySelect").append(option);
-
+   
     },
 
   });
 
 }
-
 $.ajax({
-    url: "libs/php/getBorders.php",
-    type: 'POST',
-    dataType: 'json',
-    success: function(result) {
+  url: "libs/php/getBorders.php",
+  type: 'POST',
+  dataType: 'json',
+  success: function(result) {
 
-        console.log(JSON.stringify(result))
+      console.log(JSON.stringify(result))
 
-            for (let i=0; i< result.data.border.features.length; i++) {
-            $option = $('<option>')
-            .val(result.data.border.features[i].properties.iso_a3)
-            .text(result.data.border.features[i].properties.name);
-    
-                     $('#countrySelect').append($option);
-            }
-            const filterData = result.data.border.features.filter((a) => (a.properties.iso_a3 === name));
-            border = L.geoJSON(filterData[0]); 
-            map.fitBounds(border.getBounds());
+          for (let i=0; i< result.data.border.features.length; i++) {
+          $option = $('<option>')
+          .val(result.data.border.features[i].properties.iso_a3)
+          .text(result.data.border.features[i].properties.name);
+  
+                   $('#countrySelect').append($option);
+          }
+          const filterData = result.data.border.features.filter((a) => (a.properties.iso_a3 === name));
+          border = L.geoJSON(filterData[0]); 
+          map.fitBounds(border.getBounds());
+        
           
-            
-        },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-                console.log(jqXHR);
-            }
-        }); 
+      },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.log("failed");
+             
+          }
+      }); 
+
+
+
 /*
 // Locating user's device and getting info from openCage API
 const successCallback = (position) => {
