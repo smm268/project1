@@ -89,7 +89,7 @@ function getCountryNamesAndCodes() {
 let border;
 let name;
 $.ajax({
-    url: "libs/php/getCountryInfo.php",
+    url: "libs/php/getBorders.php",
     type: 'POST',
     dataType: 'json',
     success: function(result) {
