@@ -86,36 +86,34 @@ function getCountryNamesAndCodes() {
   });
 
 }
-
-
-  $.ajax({
+let border;
+let name;
+$.ajax({
     url: "libs/php/getCountryInfo.php",
     type: 'POST',
     dataType: 'json',
-    data: {
-      country: $('#countrySelect').val(),
-     
-    },
     success: function(result) {
 
-      console.log(JSON.stringify(result));
+        console.log(JSON.stringify(result))
 
-      if (result.status.name == "ok") {
-
-      
-        $('#txtCapital').html(result['data'][0]['capital']);
-        $('#txtPopulation').html(result['data'][0]['population']);
-       
-
-      }
+            for (let i=0; i< result.data.border.features.length; i++) {
+            $option = $('<option>')
+            .val(result.data.border.features[i].properties.iso_a3)
+            .text(result.data.border.features[i].properties.name);
     
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      // your error code
-      console.log("failed to load selected country data")
-    }
-  }); 
-
+                     $('#countrySelect').append($option);
+            }
+            const filterData = result.data.border.features.filter((a) => (a.properties.iso_a3 === name));
+            border = L.geoJSON(filterData[0]); 
+            map.fitBounds(border.getBounds());
+          
+            
+        },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+                console.log(jqXHR);
+            }
+        }); 
 /*
 // Locating user's device and getting info from openCage API
 const successCallback = (position) => {
