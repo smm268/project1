@@ -1,22 +1,46 @@
 <?php
 
-ini_set('display-errors', 'on');
-error_reporting(E_ALL);
+
+$jsonFilePath = '../json/countryBorders.geo.json';
 
 
-$executionStartTime = microtime(true);
+$jsonContents = file_get_contents($jsonFilePath);
 
-$result = file_get_contents('libs/json/countryBorders.geo.json');
 
-$decode = json_decode($result,true);    
+$data = json_decode($jsonContents, true);
 
-$output['status']['code'] = "200";
-$output['status']['name'] = "ok";
-$output['status']['description'] = "success";
-$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-$output['data'] = $decode;
 
-header('Content-Type: application/json; charset=UTF-8');
+if ($data === null) {
+    echo json_encode(['error' => 'Invalid JSON data.']);
+    exit();
+}
 
-echo json_encode($output); 
+
+$countryList = [];
+
+
+if (isset($data['border']['features'])) {
+    foreach ($data['border']['features'] as $feature) {
+        $isoCode = $feature['properties']['iso_a3'] ?? null;
+        $countryName = $feature['properties']['name'] ?? null;
+
+        // Check if both ISO code and country name exist
+        if ($isoCode && $countryName) {
+            $countryList[] = [
+                'iso_a3' => $isoCode,
+                'name' => $countryName
+            ];
+        }
+    }
+}
+
+
+usort($countryList, function($a, $b) {
+    return strcmp($a['name'], $b['name']);
+});
+
+
+header('Content-Type: application/json');
+echo json_encode(['countries' => $countryList]);
+
 ?>

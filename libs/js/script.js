@@ -6,7 +6,8 @@ var map;
 let capitalCityWeather;
 let capitalCityLat;
 let capitalCityLon;
-
+let border;
+let name;
 
 
 // tile layers
@@ -86,8 +87,7 @@ function getCountryNamesAndCodes() {
   });
 
 }
-let border;
-let name;
+
 $.ajax({
     url: "libs/php/getBorders.php",
     type: 'POST',
