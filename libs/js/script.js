@@ -8,7 +8,7 @@ let capitalCityLat;
 let capitalCityLon;
 var countryLayer; 
 let border;
-let name;
+
 
 // tile layers
 
@@ -88,31 +88,22 @@ function getCountryNamesAndCodes() {
 
 }
 $.ajax({
-  url: "libs/php/getBorders.php",
-  type: 'POST',
-  dataType: 'json',
+  url: "libs/php/getBorders.php", 
+  type: 'POST', 
+  dataType: 'json', 
   success: function(result) {
-
-      console.log(JSON.stringify(result))
-
-          for (let i=0; i< result.data.border.features.length; i++) {
-          $option = $('<option>')
-          .val(result.data.border.features[i].properties.iso_a3)
-          .text(result.data.border.features[i].properties.name);
-  
-                   $('#countrySelect').append($option);
-          }
-          const filterData = result.data.border.features.filter((a) => (a.properties.iso_a3 === name));
-          border = L.geoJSON(filterData[0]); 
-          map.fitBounds(border.getBounds());
-        
+      if (result && result.features) {
           
-      },
-          error: function(jqXHR, textStatus, errorThrown) {
-              console.log("failed");
-             
-          }
-      }); 
+          const geojsonLayer = L.geoJSON(result).addTo(map);
+          map.fitBounds(geojsonLayer.getBounds());
+      } else {
+          console.error("Invalid GeoJSON data structure");
+      }
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+      console.error("AJAX request failed: ");
+  }
+});
 
 
 
@@ -150,7 +141,7 @@ const errorCallback = (error) => {
 }
 navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
-*/
+
 
 
 
@@ -200,4 +191,4 @@ $.ajax({
           console.log("failed");
       }
       
-  }); 
+  }); */
